@@ -1,0 +1,131 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .search-bar {
+    flex: 1;
+    min-width: 150px; /* Adjusted for smaller screens */
+  }
+  
+  .search-bar form {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-bar input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    padding-left: 36px; /* Add padding to accommodate the icon */
+    width: 100%;
+  }
+  
+  .search-bar input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #7c3aed; /* Add focus ring */
+  }
+  
+  .search-bar .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .login-button {
+    margin-left: 5px; /* Reduced margin for smaller screens */
+  }
+  
+  .cart-icon {
+    margin-left: 5px; /* Reduced margin for smaller screens */
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      flex-wrap: nowrap;
+    }
+  
+    .search-bar {
+      min-width: 200px; /* Adjust as needed */
+      display: flex;
+      justify-content: center; /* Center the search bar */
+    }
+  
+    .login-button {
+      margin-left: 10px;
+    }
+  
+    .cart-icon {
+      margin-left: 10px;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .search-bar {
+      min-width: 120px; /* Further adjusted for very small screens */
+    }
+  
+    .login-button {
+      padding: 6px 8px; /* Smaller padding for the button */
+      font-size: 14px; /* Smaller font size for the button */
+    }
+  
+    .cart-icon {
+      font-size: 20px; /* Smaller icon size */
+    }
+  }
+  
+  .navbar {
+    background-color: white; /* Change navbar background to white */
+    padding: 15px 0;
+  }
+  
+  .logo {
+    font-size: 24px; /* Font size for logo text */
+    font-weight: bold;
+    color: #4a4a4a; /* Color for logo text */
+    text-transform: uppercase; /* Transform text to uppercase */
+    letter-spacing: 2px; /* Increase letter spacing */
+  }
+  
+  .logo:hover {
+    color: #7c3aed; /* Hover effect for logo text */
+  }
+  
+  .login-button {
+    background: none; /* Remove background from login button */
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline; /* Add underline to login text */
+  }
+  
+  .login-button:hover {
+    color: #555; /* Add hover effect to login text */
+  }
+  
+  .cart-icon {
+    position: relative;
+  }
+  
+  .cart-icon svg {
+    height: 24px;
+    width: 24px;
+  }
+  
+  .badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff0000;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  

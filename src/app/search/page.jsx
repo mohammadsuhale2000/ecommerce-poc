@@ -33,11 +33,11 @@ function Page() {
   }
   return (
     <div className="md:mx-20 md:my-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center pt-4 px-4">
         <span>{searchResults.length} results found</span>
         <button
           onClick={handleClearSearch}
-          className="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400"
+          className="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 "
         >
           Clear All
         </button>

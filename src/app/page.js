@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Skeleton } from "@/components/ui/skeleton";
 import ProductCard from "@/components/ProductCards";
 import CarouselComponent from "@/components/ui/CarouselComponent";
 import Image from "next/image";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
-// Define the static categories
 const categories = [
   "All Categories",
   "Fruits & Vegetables",
@@ -20,6 +19,19 @@ const categories = [
 const Page = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [priceRange, setPriceRange] = useState(1000);
+
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    handleResize(); // Set initial state
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchCategoryData = async () => {
@@ -32,87 +44,129 @@ const Page = () => {
       );
       setCategoryData(categoryData);
     };
-
     fetchCategoryData();
   }, []);
 
-  // Filter products based on selected category
   const getProductsByCategory = (categoryName) => {
     const categoryIndex = categories.indexOf(categoryName);
     return categoryData[categoryIndex] || [];
   };
 
-  const selectedProducts = getProductsByCategory(selectedCategory);
-
-  if (categoryData.length <= 0) {
-    return (
-      <div className="w-[90vw] mx-auto space-y-10">
-        <Skeleton className="h-[200px] w-full rounded-lg" />
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <div className="flex space-x-4">
-              {[...Array(4)].map((_, j) => (
-                <Skeleton key={j} className="h-[200px] w-[200px]" />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const selectedProducts = getProductsByCategory(selectedCategory).filter(
+    (product) => product.price >= minPrice && product.price <= maxPrice
+  );
 
   return (
-    <div className="my-3 w-full">
-      {/* Carousel only shows if 'All Categories' is selected */}
+    <div className="my-3 w-full relative">
+      {/* Carousel only for "All Categories" */}
       {selectedCategory === "All Categories" && <CarouselComponent />}
 
-      <div className="offers-container">
-        <div className="offer-text">Limited Time Offer: 50% Off!</div>
-        <div className="offer-text">Buy 1 Get 1 Free on All Items!</div>
-        <div className="offer-text">Free Shipping on Orders Over ₹500!</div>
-      </div>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Sidebar */}
+        <div className="w-full md:w-1/5 bg-white border-r border-gray-200 p-4 md:sticky top-0 h-auto md:h-screen overflow-y-auto">
+          {/* Category Toggle Header - Arrow visible only in mobile */}
+          <div
+            className="flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-gray-100 md:block"
+            onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+          >
+            <h2 className="text-sm font-semibold">
+              {isCategoryOpen || isDesktop ? "Categories" : selectedCategory}
+            </h2>
+            <div className="block md:hidden">
+              {isCategoryOpen ? (
+                <ChevronDown className="w-5 h-5 text-gray-600" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-gray-600" />
+              )}
+            </div>
+          </div>
 
-      <div className="flex gap-10 my-3">
-        {/* Static Category Sidebar */}
-        <div className="w-1/5 bg-white border-r border-gray-200 p-4 sticky top-0 h-screen overflow-y-auto no-scrollbar">
-          <h2 className="text-base font-semibold mb-4">Categories</h2>
-          <ul className="space-y-1">
-            {categories.map((category, index) => (
-              <li
-                key={index}
-                onClick={() => setSelectedCategory(category)}
-                className={`cursor-pointer flex items-center gap-3 p-2 rounded-lg border hover:bg-gray-100 ${
-                  selectedCategory === category
-                    ? "bg-green-100 border-green-400"
-                    : "border-gray-200"
-                }`}
-              >
-                <Image
-                  src={`/logo ${index + 2}.png`}
-                  alt={category}
-                  width={40}
-                  height={40}
-                  className="rounded-md object-cover"
-                />
-                <span className="text-sm font-medium">{category}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Categories List - Always open in desktop, toggle in mobile */}
+          {(isCategoryOpen || isDesktop) && (
+            <ul className="space-y-1 mt-2">
+              {categories.map((category, index) => (
+                <li
+                  key={index}
+                  className={`flex items-center gap-3 p-2 rounded-lg border hover:bg-gray-100 ${
+                    selectedCategory === category ? "bg-gray-200" : ""
+                  }`}
+                >
+                  <Image
+                    src={`/logo ${index + 2}.png`}
+                    alt={category}
+                    width={40}
+                    height={40}
+                    className="rounded-md object-cover"
+                  />
+                  <button
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setIsCategoryOpen(false); // Close dropdown on mobile
+                    }}
+                    className={`text-xs font-medium ${
+                      selectedCategory === category
+                        ? "text-green-600"
+                        : "text-gray-800"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Product Listings */}
-        <div className="w-3/4">
-          <div className="mt-10 mb-24">
-            <h1 className="text-base font-semibold text-foreground mb-4">
-              Products in {selectedCategory}
-            </h1>
+        <div className="w-full md:w-4/5">
+          <div className="mt-2 mb-15">
+            {/* Category Title & Price Filter */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-2">
+              {/* Breadcrumb Navigation - Always visible, stacked on mobile */}
+              <div className="w-full pt-2 mt-[-35px] sm:mt-[-20px] pl-4">
+                <div className="flex items-center text-sm text-gray-600">
+                  <a
+                    href="/"
+                    className="text-blue-600 hover:underline text-xs sm:text-sm"
+                  >
+                    Home
+                  </a>
+                  <ChevronRight className="w-4 h-4 mx-2 text-gray-500" />
+                  <span className="font-medium text-gray-800 text-xs sm:text-sm">
+                    {selectedCategory}
+                  </span>
+                </div>
+              </div>
 
-            {/* Updated Grid: Now 4 products per row on large screens */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div className="p-3 bg-white rounded-lg flex items-center gap-3 w-full md:w-auto whitespace-nowrap">
+                <h2 className="text-sm font-semibold">Price Range:</h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs">₹{minPrice}</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    value={priceRange}
+                    onChange={(e) => {
+                      setPriceRange(e.target.value);
+                      setMaxPrice(e.target.value);
+                    }}
+                    className="w-32 appearance-none h-[2px] bg-blue-300 rounded outline-none"
+                  />
+                  <span className="text-xs">₹{priceRange}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {selectedCategory === "All Categories" ? (
                 categoryData
                   .flat()
+                  .filter(
+                    (product) =>
+                      product.price >= minPrice && product.price <= maxPrice
+                  )
                   .map((product, index) => (
                     <ProductCard key={index} product={product} />
                   ))

@@ -35,53 +35,49 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div
-      className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200 w-[200px] h-[250px]"
-      onClick={() => router.push(`/product/${_id}`)}
-    >
-      <img
-        className="w-[100px] h-[100px] object-cover rounded-md mx-auto transition-transform duration-300 transform hover:scale-105"
-        src={images[0]}
-        alt={name}
-      />
-      <div className="p-2 text-center">
-        <h2 className="text-sm font-semibold text-gray-800 truncate">{name}</h2>
-        <p className="text-gray-500 text-sm mt-1">₹{price}</p>
-        <p className="text-gray-400 text-xs">{quantity} left</p>
+   <div
+  className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200 w-[180px] h-[280px] sm:w-[190px] sm:h-[250px]"
+  onClick={() => router.push(`/product/${_id}`)}
+>
+  {/* Product Image */}
+  <div className="w-full h-[120px] sm:h-[100px] flex items-center justify-center overflow-hidden relative">
+    <img
+      className="object-contain w-full h-full hover:scale-105 transition-transform duration-300"
+      src={images[0]}
+      alt={name}
+    />
+  </div>
 
-        {counter === 0 ? (
-          <button
-            onClick={addToCart}
-            className="mt-4 bg-green-400 text-white text-xs py-2 px-4 rounded-md hover:bg-green-500 transition duration-300 ease-in-out"
-          >
-            Add to Cart
-          </button>
-        ) : (
-          <div className="flex items-center justify-center">
-            <button
-              id="decrease"
-              className="mt-4 bg-green-400 text-white text-xs py-2 px-4 rounded-l-md hover:bg-green-500 transition duration-200 ease-in-out"
-              onClick={removeFromCart}
-            >
-              -
-            </button>
-            <span
-              className="mt-4 bg-green-400 text-white text-xs py-2 px-4 font-semibold"
-            >
-              {counter}
-            </span>
-            <button
-              id="increase"
-              className="mt-4 bg-green-400 text-white text-xs py-2 px-4 rounded-r-md hover:bg-green-500 transition duration-200 ease-in-out"
-              onClick={addToCart}
-            >
-              +
-            </button>
-          </div>
-        )}
-      </div>
+  {/* Product Details */}
+  <div className="p-2 text-center">
+    <h2 className="text-xs font-semibold text-gray-800 truncate">{name}</h2>
+    <p className="text-gray-500 text-xs mt-1">250ml</p>
+
+    <div className="flex items-center justify-center space-x-2 mt-1">
+      <p className="text-black font-bold text-sm">₹{price}</p>
+      <p className="text-gray-400 text-xs line-through">₹129</p>
     </div>
+
+    {/* Add to Cart */}
+    {counter === 0 ? (
+      <button
+        onClick={addToCart}
+        className="mt-2 border border-pink-500 text-pink-500 font-semibold text-xs py-1 px-3 rounded-md hover:bg-pink-500 hover:text-white transition duration-300 ease-in-out w-full"
+      >
+        Add to Cart
+      </button>
+    ) : (
+      <div className="flex items-center justify-center mt-2 space-x-2">
+        <button onClick={removeFromCart} className="px-3 py-1 bg-gray-200 rounded">-</button>
+        <span className="text-sm">{counter}</span>
+        <button onClick={addToCart} className="px-3 py-1 bg-gray-200 rounded">+</button>
+      </div>
+    )}
+  </div>
+</div>
+
   );
+
 };
 
 export default ProductCard;
