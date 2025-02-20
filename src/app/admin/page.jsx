@@ -6,7 +6,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { app } from "@/firebaseConfig.js";
+import { app } from "./../../firebaseConfig.js";
 import axios from "axios";
 
 const ProductForm = () => {

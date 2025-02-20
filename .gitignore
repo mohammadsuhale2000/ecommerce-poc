@@ -9,8 +9,6 @@
 # testing
 /coverage
 
-# firebase
-/src/firebaseConfig.js
 
 # next.js
 /.next/
